@@ -1,0 +1,84 @@
+Design TicketMaster
+
+Transactional DB
+Avoid partial claims.
+
+Data Partitioning
+- Distributed transactions on multiple partitons are very slow
+   Put every seat in one row in the same partition
+
+Partition key for seat ( Event ID + sectionid + row number)
+Partition by hash range of this key
+
+NOt all rows are equal
+- A row at a Taylor seift concert may get a lot more contention than a row at bitcoin summit
+
+How can we deal with these hot partitions?
+-> 
+
+Write back cache  for hot partitions
+write to the cache(in memeory server with some amount of locking) immediately and write to the DB later asynchronously
+
+claim -> redis( need to check alternative lock based) -> DB
+
+
+--Claim Expiration--
+
+how should we handle when a user doesnt but the tickets in time
+- we donet want this triggered bu the client device , might never get there as they may be malicious
+- we could use a stored procedure, but seems unnecesary
+- Just have the DB write a TS for when the claim expires
+
+Seat 22         claimuserid:40   claimExpiry: 4:00  booked? NO
+                                  fencing token
+
+Issues with unfair claim
+- users are basically spamming rewuests until they successfullly get a cliam
+- even if we introudced  long poll. erbhook/sse to tell them when the sear is now available, they will all try to claim it and will lead to a lot of requests to the server
+once claim expires, we should have a waitlist
+
+Fair Claim implementations
+
+  If users are allowed to book specific seara within a section, , a user trying to book many serts woule eitther
+  1. never be able to book any if people who want just a subset keep staking clains
+  2. hold back everybodu else trying to book in that section from  realizing they wont get a seat
+
+If users cannot choose specific searts , but rather just a row , we can respect time priority witnout any issues.
+row has 8 seats \ \ \ \ \ \ \ \ 
+user 1 can get 4 seats
+user 2 can get 2 seats
+user 3 can get 2 seats
+
+
+--Fair Claim Datamodel
+A ton of requessts come in , we can ugger them in a queue and process them one at a time as we have capacity
+Use a queue -> doubly linked list with hashMap so that removal from the queue is also efficient for node removals
+order 4 - 2 seats --> <--order 3 - 3 seats --> order2 --> <-- 4 seats --> order 1 - 2 seats
+
+-- Expiring unfillabel orders
+as we assign seats , some seats will become unfillable( eg i want 6 seats but there are only 4 lft)
+
+--Active order expiration
+Treeset index of orders of size
+find all elemets with seats > 2
+delete those elemets o(1) for each due to linked hashap
+pro- quickly find all expired elements
+con : more storae , neeed locks on tree set to write to and read from it )(logn) writes
+
+option 2 
+-- iterate though queue and delete invalid elemts
+ - could be bad if lists is very long
+- note teha to tadd elemets to our queue, we only need to frb a lock on the tail node
+This means that we can more or less remove nodes in the middle of out linkedList
+
+
+--Partitioning
+
+-- Data storage
+
+we can use  change data capture istead
+- in memory linkedlist
+memcache - write ahead log -> kafka -> consumer -> Booknng DB
+
+
+
