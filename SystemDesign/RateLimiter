@@ -1,0 +1,36 @@
+REquirement
+   build a rate liniter that stps maliciious users from submitting roo many requests to our services while inroducing minmal latency
+  Support  a variety of different rate limitng techniques
+capacity estimates
+  1 billion users
+  20 services to rate limit
+  user id = 8 bytes, integer to keep track of count = 4 bytes
+  1 billion * 20 * (8+4) = 240 GB
+
+what to rate limit on
+  userid
+    ++easy to trak, bad users will be blocked
+    -- users can create many accounts , not all services need authentication
+
+  ip address
+      ++ easy to track, no need to be signed on , precents multiple accounts
+      -- ggod actors on same network will be throttled
+
+  Hybrid appoach
+
+
+Rate limiting interace
+we will be able to support different umplememntation of the rate limitedr interface
+
+  boolean ratelimit(long userid, string ipaddress, string servicename, date request+time)
+  returns true if rewuest should be rate limited
+
+where does the rate liiiter go
+
+note: the amount of data that we need to store is too bif to put on lur load balancer
+option1 - perform rate limiting locally on each service
+option 2 dedicated distributed rate limiter
+
+local rate 
+  pros 
+    
