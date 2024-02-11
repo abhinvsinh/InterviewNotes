@@ -1,0 +1,71 @@
+
+1.scrape all content 
+2. finish it in a week
+3. 
+--capacity estimates
+1 1 billion web pages
+  1 mb to store the contents of a page
+we ned to make a 1 billion rewuests . sore 1 PB
+1 week-> 600k seconds , 1 billion /60K = 1500 
+
+--process of crawlling
+  pull in url from out to crawl list
+  check if we have already crawled it
+   check if crawling it s is compliant with its hosts robots.txt file
+  get the ip address of the host visa dns
+  make an http request to load the contents of the site
+  check if we have already processed a diggerent url with identical content
+  parse the content
+  store the results somewhere
+  add any referenced urls to our to crawl list
+
+-- Fetching urls to crawl
+  can we reduce networking calls on teh frontier
+  we could keep each nodes url completely locally
+cons of local 
+  1 no load balancing
+  2 we end up processing duplicate links
+we neeed to design a distributed frontier
+  how to avoid duplicate fetches
+    one solution - centralized DB
+   this requires an extra nw call
+
+how to stop processing duplicate content
+  we hae to actulaly fertch the content first
+  we can then hash it
+  since we dont knwo what these  hashes are before fetching the urlsl there is  way to pre-organice the urls on the sam node as
+  -- Content hash checnking
+      centralized redis set of hashes\  
+
+Domain name service
+  provides a mappping from host name to ip
+ -> requires a nw call
+recall jsut one ip for the host
+
+robots.txr file
+  - do not crawl twitter
+ifnore url and get next one frtom frontier
+
+
+--Pushgn to the frontier
+   how showld we model frontier
+what ds sould we use
+- Stack - DFS
+  not really feasinle , amy processes  wringintt o the slack, whats the top?
+- queue ( BFS) 
+  we can do this ( message queues)
+- priority queue?
+- maybe hard to implement but if we prefer specific we
+
+we want reliability, we dont want to skip any websites
+woulsd be great if we dont hae to build oru paritionaing solution
+1, frontier ->Kafka              | Colocate both for low latency
+2. Processing nodes -> Flink     |
+we get full replayability, no lost messages , partiotioning
+-> all writes to S# be idempotent, can use internal state for caching
+
+
+
+
+
+    
