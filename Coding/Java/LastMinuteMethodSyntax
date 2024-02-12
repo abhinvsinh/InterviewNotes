@@ -1,0 +1,2 @@
+Initialize ArrayList with values in one line
+ArrayList<String> list = Arrays.asList("A", "B", "C");
