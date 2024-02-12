@@ -33,4 +33,46 @@ option 2 dedicated distributed rate limiter
 
 local rate 
   pros 
+   - no extra nq calls reqd
+   - fewer comp to manage
+  cons
+   - if we get spammed can yse up server bandwidth
+   - our application and ratelimiter are tightly coupled
+
+Dedicated DIstributed later
+   pros
+      - shields app servers from large bursts of network traffic
+      - scales up or down independently
+   cons
+      - introduces extra networking call to api req
+      - 
+
+Ratelimiting caching
+   idea - write back cache on the load balancer once user reaches certain threshold
+
+Rate limiting DB choice
+-> no time to access disk so we need memcache or redis
+   can take advantsage of existing data structures
+   replication also fairly easy to setup
+
+Replication choice
+- can we get away with leaderless or multileaeder replication
+- could increase weite throughput , oower write load on each system
+- have to wait for anti entroppy for counts to synchronize(could use a crdt)
+
+Single leader replication
+- counts of requests on master are accurate , can do all reads on master
+- if we hae enough shards should be able to have rreasonable . R?W thorughput
+---------------------
+
+fixed window rate limiting
+- eg - w requests resetting every minute
+
+slidingwindow rate limiting
+   - linkedlist with the start time and keep adding the subsequent requests if within the minute
+
+Concurrency considerations
+- do we need to perform locking
+yes we do
+
     
