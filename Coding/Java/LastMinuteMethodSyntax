@@ -1,2 +1,11 @@
 Initialize ArrayList with values in one line
 ArrayList<String> list = Arrays.asList("A", "B", "C");
+Convert character to integer ( use char - '0') as shown below
+  char curr;
+  int current = current*10+curr-'0';
+Generate random numbers in java 
+Math.random() returns a number between 0 and 1
+Random numbers between 0 to max = max * Math.random()
+for a range from min to max , we need to do (int) (Math.random * (max - min) + min)
+max = 15,min = 11                            ( 1 * (15-11)  + 11 ) = 15
+max = 15,min = 11                            ( 0 * (15-11)  + 11 ) = 11
