@@ -1,0 +1,43 @@
+Requirements
+- newsfeed
+- nestted comments
+- users can quickly see who they are following and who follows them
+- we can quickly load all posts of a given user
+- low latency news feed from posts that a user follows
+- posts can have configurable privacy types , as do folloers
+- users can comment on posts and comments can be infinitely nested
+
+Reads >> writes
+
+Capacity estimates
+- 100 chars a post, 100 bytes for text , maybe 100 for other metadata
+- 1 billion posts per day-> 1 billion 200 bytes 365 days/year= 73 tb /year
+- on average users have 100 followers, some verified users have millions
+- comments also have 100 characters, so around 200 bytes with metadata
+- most commetns on one post = 1 million 
+
+Fetching Followers /following
+- get Followers(userId)
+- get Following(userid)  we want these queries to return quickly
+user -> follower service
+follower/follwoing DB
+user -> 
+follower following partition
+- user id -> partitionkey
+- use flink to keep state of all the followerte for a gien poster, avoids making calls to db
+
+stream followers changes to flink bia cdc
+- shard flinkg on poster id
+- posts, edits, security permission changes through this path
+
+
+-- posts , DB schema
+- cassandra, partiitoin useing userid, timestamp as sort key, tweetbody
+                                  69, 01/06/w021        --
+
+
+fetching popular users that a given user follows
+
+
+-- security level for posts
+
