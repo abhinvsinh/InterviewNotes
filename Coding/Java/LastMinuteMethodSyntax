@@ -1,5 +1,7 @@
 Initialize ArrayList with values in one line
 ArrayList<String> list = Arrays.asList("A", "B", "C");
+Convert list to array
+String[] arr = list.toArray(new String[0]);
 Convert character to integer ( use char - '0') as shown below
   char curr;
   int current = current*10+curr-'0';
