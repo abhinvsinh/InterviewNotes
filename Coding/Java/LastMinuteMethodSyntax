@@ -22,3 +22,13 @@ max = 15,min = 11                            ( 0 * (15-11)  + 11 ) = 11
             maxHeap.offer(entry.getKey());
         }
 -----------
+Comparator example inline
+        int[][] points;
+        //we cant use the trick Arrays.sort(points,(a,b)->a[1]-b[1]);
+        //as it will cause overflow for very large numbers
+        Arrays.sort(points,(a,b)->{
+            if(a[1]==b[1]) return 0;
+            if(a[1]<b[1])return -1;
+            return 1;
+        });
+-----------
